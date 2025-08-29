@@ -1,11 +1,11 @@
 -- Police Manager Class
 -- Manages police officer spawning based on player count with continuous patrol behavior
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local _ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
-local Config = require(ReplicatedStorage.Shared.Config)
+local Config = require(game:GetService("ReplicatedStorage").Shared.Config)
 local PoliceOfficer = require(script.Parent.PoliceOfficer)
 local CommunicationSystem = require(script.Parent.CommunicationSystem)
 

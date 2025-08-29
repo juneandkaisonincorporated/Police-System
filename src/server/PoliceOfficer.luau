@@ -1,9 +1,9 @@
 
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local _ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Debris = game:GetService("Debris")
 
-local Config = require(ReplicatedStorage.Shared.Config)
+local Config = require(game:GetService("ReplicatedStorage").Shared.Config)
 local WeaponSystem = require(script.Parent.WeaponSystem)
 local AIBehavior = require(script.Parent.AIBehavior)
 local CommunicationSystem = require(script.Parent.CommunicationSystem)
@@ -157,6 +157,10 @@ function PoliceOfficer:SetupSniperPosition()
 			
 			if victim and head and distance <= self.config.attackRange then
 				AIBehavior.FaceTarget(self.humanoidRootPart, head.Position)
+				
+				self:CreateSniperLaser(head.Position)
+				task.wait(1)
+				
 				self:FireWeapon(head.Position)
 				task.wait(self.weaponConfig.fireRate or 2.5)
 			else
@@ -164,6 +168,47 @@ function PoliceOfficer:SetupSniperPosition()
 			end
 		end
 	end)
+end
+
+function PoliceOfficer:CreateSniperLaser(targetPos)
+	if not self.weapon then return end
+	
+	local weaponPart = self.weapon:FindFirstChild("Handle") or self.weapon:FindFirstChildOfClass("BasePart")
+	if not weaponPart then return end
+	
+	local startPos = weaponPart.Position
+	local distance = (targetPos - startPos).Magnitude
+	
+	local laser = Instance.new("Part")
+	laser.Name = "SniperLaser"
+	laser.Size = Vector3.new(0.1, 0.1, distance)
+	laser.Material = Enum.Material.Neon
+	laser.Color = Color3.fromRGB(255, 0, 0)
+	laser.CanCollide = false
+	laser.Anchored = true
+	laser.Shape = Enum.PartType.Cylinder
+	laser.Transparency = 0.3
+	
+	local midPoint = (startPos + targetPos) / 2
+	laser.CFrame = CFrame.new(midPoint, targetPos) * CFrame.Angles(0, math.rad(90), 0)
+	laser.Parent = workspace
+	
+	local laserLight = Instance.new("PointLight")
+	laserLight.Brightness = 5
+	laserLight.Range = 20
+	laserLight.Color = Color3.fromRGB(255, 0, 0)
+	laserLight.Parent = weaponPart
+	
+	task.spawn(function()
+		for i = 1, 10 do
+			laser.Transparency = 0.3 + (i * 0.07)
+			task.wait(0.1)
+		end
+		laser:Destroy()
+		laserLight:Destroy()
+	end)
+	
+	print("[SNIPER LASER] " .. self.officerType .. " targeting...")
 end
 
 function PoliceOfficer:StartBehaviorLoops()

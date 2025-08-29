@@ -4,7 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
-local Config = require(ReplicatedStorage.Shared.Config)
+local Config = require(game:GetService("ReplicatedStorage").Shared.Config)
 local PoliceManager = require(script.PoliceManager)
 local CommunicationSystem = require(script.CommunicationSystem)
 

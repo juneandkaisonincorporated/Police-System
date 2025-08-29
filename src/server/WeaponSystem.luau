@@ -1,9 +1,9 @@
 
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local _ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
-local Config = require(ReplicatedStorage.Shared.Config)
+local Config = require(game:GetService("ReplicatedStorage").Shared.Config)
 
 local WeaponSystem = {}
 
