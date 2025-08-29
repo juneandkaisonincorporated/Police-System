@@ -75,24 +75,6 @@ local function SetupRemoteFunctions()
 		return Config.AssetLoader.CheckAssets()
 	end
 	
-	-- Get gun information
-	local getGunInfoFunction = Instance.new("RemoteFunction")
-	getGunInfoFunction.Name = "GetGunInfo"
-	getGunInfoFunction.Parent = remoteContainer
-	
-	getGunInfoFunction.OnServerInvoke = function(player, gunType)
-		return GunFramework.GetGunConfig(gunType)
-	end
-	
-	-- Get available gun types
-	local getGunTypesFunction = Instance.new("RemoteFunction")
-	getGunTypesFunction.Name = "GetAvailableGunTypes"
-	getGunTypesFunction.Parent = remoteContainer
-	
-	getGunTypesFunction.OnServerInvoke = function(player)
-		return GunFramework.GetAvailableGunTypes()
-	end
-	
 end
 
 local function SetupChatCommands()
@@ -255,20 +237,18 @@ local function SetupChatCommands()
 					end
 					
 				elseif command == "guntypes" then
-					local gunTypes = GunFramework.GetAvailableGunTypes()
 					print("Available gun types:")
-					for _, gunType in pairs(gunTypes) do
+					for gunType, _ in pairs(Config.WeaponConfigs) do
 						print("   - " .. gunType)
 					end
 					
 				elseif command == "gunconfig" then
 					print("Gun configurations:")
-					for gunType, config in pairs(GunFramework.GunConfigs) do
+					for gunType, config in pairs(Config.WeaponConfigs) do
 						print("   " .. gunType .. ":")
-						print("     Damage: " .. config.damage.min .. "-" .. config.damage.max)
-						print("     Fire Rate: " .. config.fireInterval .. "s")
-						print("     Range: " .. config.range .. " studs")
-						print("     Magazine: " .. config.magSize .. " rounds")
+						print("     Damage: " .. config.damage)
+						print("     Fire Rate: " .. config.fireRate .. "s")
+						print("     Weapon Type: " .. config.weaponType)
 					end
 					
 				elseif command == "help" then
